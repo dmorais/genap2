@@ -1,0 +1,20 @@
+---
+
+# handlers for move.postgres
+
+- name: Init DB
+  shell: /usr/pgsql-{{ postgresql_default_version }}/bin/postgresql-{{ postgresql_default_version }}-setup initdb
+
+
+- name: Stop postgres
+  shell: systemctl stop postgresql-{{ postgresql_default_version }}.service
+
+- name: Start postgres
+  shell: systemctl start postgresql-{{ postgresql_default_version }}.service
+
+
+- name: Reload postgres
+  shell: systemctl reload postgresql-{{ postgresql_default_version }}.service
+
+- name: Reload deamon
+  shell: systemctl daemon-reload

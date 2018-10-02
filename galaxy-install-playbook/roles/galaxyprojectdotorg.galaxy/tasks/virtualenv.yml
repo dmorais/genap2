@@ -1,0 +1,6 @@
+
+- name: Create Galaxy virtualenv
+  pip: name=pip virtualenv={{ galaxy_venv_dir }} virtualenv_command="{{ pip_virtualenv_command | default( 'virtualenv' ) }}"
+
+- name: Ensure pip is the latest release
+  shell: source "{{ galaxy_server_dir }}"/.venv/bin/activate && pip install --upgrade pip

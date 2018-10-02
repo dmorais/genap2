@@ -1,0 +1,13 @@
+<parameters>
+  <param label="Processors" name="processors" type="integer" size="2" min="1" max="24" value="1" help="Number of processing cores, 'ppn' value (1-24). Leave blank to use default value." />
+  <param label="Memory" name="memory" type="integer" size="3" min="1" max="256" value="1" help="Memory size in GB, 'pmem' value (1-256). Leave blank to use default value." />
+  <param label="Time" name="time" type="integer" size="3" min="1" max="120" value="1" help="Maximum job time in hours, 'walltime' value (1-120). Leave blank to use default value." />
+  <param label="Queue (Mammouth ONLY)" name="queue" type="select" help="Modify this option to use on of the default queue set ups.">
+    <option value="qwork">qwork 24 cores 32GB RAM walltime 72 Hours (default)</option>
+    <option value="qtest3_short">qtest3_short, 24 cores, 32 RAM, walltime 15 min (short jobs. Lowest waiting time)</option>
+    <option value="qwork_extended">qwork_extended 24 cores 32GB RAM walltime 120 Hours (CPU-time intensive)</option>
+    <option value="qfat256">qfat256, 48 cores, 256 RAM, walltime 120 Hours (High memory requirement)</option>
+    <option value="qfat512">qfat512, 48 cores, 512 RAM, walltime 48 Hours (Highest memory requirement. Limited walltime.)</option>
+  </param>
+</parameters>
+

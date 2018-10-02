@@ -1,0 +1,6 @@
+.include /lib/systemd/system/postgresql-{{ postgresql_default_version }}.service
+
+[Service]
+# Location of database directory
+Environment=PGDATA={{ postgresql_dir }}{{ postgresql_default_version }}/data
+Environment=PGLOG={{ postgresql_dir }}{{ postgresql_default_version }}/data/pgstartup.log

@@ -1,0 +1,52 @@
+- name: Test functions
+  hosts: galaxyservers
+  become: yes
+  become_method: sudo
+  remote_user: "{{ remote_user }}"
+
+  tasks:
+
+#  - name: Apply this context mapping to the running system
+#    become: yes
+#    become_method: sudo
+#    become_user: "{{ remote_user }}"
+#    shell: /usr/sbin/restorecon -R -v  {{ postgresql_dir }}
+
+
+#    - name: Modify Postgres env variable
+#      become: yes
+#      become_method: sudo
+#      become_user: root
+#      template:
+#        src: "templates/postgres/postgresql-{{ postgresql_default_version }}.service"
+#        dest: "{{ postgresql_service_dir }}/postgresql-{{ postgresql_default_version }}.service"
+
+#    - name: Replace Line
+#      become: yes
+#      become_method: sudo
+#      become_user: postgres
+#      replace:
+#        path: /var/lib/pgsql/.bash_profile
+#        regexp: '/var/lib/pgsql/10/data'
+#        replace: '/srv/galaxy/pgsql/10/data'
+#        backup: yes
+
+#    - name: Reboot the Machine
+#      shell: "sleep 5 && sudo reboot"
+#      async: 1
+#      poll: 0
+#
+#    - name: Wait server come back
+#      wait_for_connection:
+#        connect_timeout: 20
+#        sleep: 5
+#        delay: 5
+#        timeout: 300
+
+#      wait_for:
+#        port: 22
+#        host: '{{ (ansible_ssh_host|default(ansible_host))|default(inventory_hostname) }}'
+#        search_regex: OpenSSH
+#        delay: 10
+#        sleep: 10
+#        timeout: 300

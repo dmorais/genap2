@@ -1,0 +1,78 @@
+---
+- name: Create Galaxy user and install OS dependencies
+  hosts: galaxyservers
+  become_method: sudo
+  become: yes
+  remote_user: "{{ remote_user }}"
+
+
+  tasks:
+    - name: Create Galaxy user
+      user:
+        name: "{{ galaxy_user }}"
+        system: yes
+
+    - name: Create Galaxy server directory
+      file:
+        name: /srv/galaxy
+        state: directory
+        owner: "{{ galaxy_user }}"
+        group: "{{ galaxy_user }}"
+
+    - name: Create Galaxy database dir
+      file:
+        name: "{{ host_root_database_dir }}"
+        state: directory
+        owner: "{{ galaxy_user }}"
+        group: "{{ galaxy_user }}"
+
+    - name: Create Depedency dir
+      file:
+        name: "{{ host_tool_dependency_dir }}"
+        state: directory
+        owner: "{{ galaxy_user }}"
+        group: "{{ galaxy_user }}"
+
+    - name: Create Shed-tools directory
+      file:
+        name: "{{ host_shed_tools_dir }}"
+        state: directory
+        owner: "{{ galaxy_user }}"
+        group: "{{ galaxy_user }}"
+
+    - name: Install mlocate
+      yum:
+        pkg: mlocate
+        update_cache: yes
+        state: present
+
+    - name: Add EPEL
+      command: yum install -y epel-release
+
+    - name: Clean EPEL
+      command: yum clean all
+
+    - name: Update EPEL
+      command: yum -y update
+
+    - name: Install base packages1
+      yum:
+        pkg: "{{ item }}"
+        update_cache: yes
+        state: present
+      with_items:
+        - vim
+        - tar
+        - bzip2
+        - wget
+        - policycoreutils-python
+        - selinux-policy-targeted
+        - selinux-policy
+        - libselinux
+        - libselinux-python
+        - libselinux-utils
+        - setroubleshoot
+        - setroubleshoot-server
+        - setroubleshoot-plugins
+
+

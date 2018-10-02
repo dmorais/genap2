@@ -1,0 +1,5 @@
+#postgresql_service_name: postgresql
+#postgresql_dir: /srv/galaxy/pgsql/
+#host_root_pgsql_dir: /srv/galaxy/
+#postgresql_data_dir: /var/lib/pgsql/9.4/data
+#postgresql_new_data_dir: "{{host_root_pgsql_dir}}pgsql/9.4/data"

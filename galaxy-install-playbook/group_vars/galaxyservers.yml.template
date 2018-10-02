@@ -1,0 +1,18 @@
+# Users
+galaxy_user:
+remote_user:
+
+# Host
+host_home_dir: /home/galaxy
+host_galaxy_root_dir:
+host_tool_dependency_dir:
+host_shed_tools_dir:
+
+
+
+# Miniconda
+miniconda_home:
+miniconda_modify_path:
+miniconda_rcfile:
+miniconda_installed:
+miniconda_lib:

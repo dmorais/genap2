@@ -1,0 +1,45 @@
+- name: Install Miniconda
+  hosts: galaxyservers
+  become_method: sudo
+  become: yes
+  remote_user: "{{ remote_user }}"
+  roles:
+    - miniconda
+
+- name: Fix libpython2.7.so.1.0 BUG
+  hosts: galaxyservers
+  become_method: sudo
+  become: yes
+  remote_user: "{{ remote_user }}"
+  tasks:
+    - name: UpdateDB
+      command: updatedb
+
+    - name: Add libpython2.7 path
+      lineinfile:
+        dest: /etc/ld.so.conf
+        state: present
+        line: "{{ miniconda_lib }}"
+
+    - name: Reload configs
+      command: ldconfig
+
+    - name: Copy over Good libread
+      copy:
+        remote_src: yes
+        src: /usr/lib64/libreadline.so.6
+        dest: "{{ miniconda_lib }}"
+        owner: galaxy
+        group: galaxy
+        mode: 777
+
+
+    - name: Remove conda lib from ld.so.conf
+      lineinfile:
+        path: /etc/ld.so.conf
+        line: '/srv/galaxy/tool-dependency/_conda//lib'
+        state: absent
+
+    - name: Reload libs
+      shell: "ldconfig"
+

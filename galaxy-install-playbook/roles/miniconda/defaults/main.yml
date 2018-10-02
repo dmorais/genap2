@@ -1,0 +1,19 @@
+---
+# Main configuration
+# -------------------
+
+miniconda_url: >
+  http://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh
+
+#miniconda_home: '~/miniconda'
+
+miniconda_environments:
+  - name: prod
+    python_version: 2.7.15
+    pkgs: 'virtualenv=15.0.3'
+
+
+miniconda_modify_path: no
+miniconda_rcfile: '~/.bashrc'
+
+miniconda_add_condarc: yes

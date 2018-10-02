@@ -1,0 +1,7 @@
+---
+
+# Coordinate all playbooks deployment
+
+- import_playbook: create-galaxy-user.yml
+- import_playbook: install_miniconda.yml
+- import_playbook: install-galaxy.yml

@@ -1,0 +1,109 @@
+---
+# Playbook to move Postgres data to galaxy database dir
+
+
+- name: Stop Postgres
+  shell: systemctl stop postgresql-{{ postgresql_default_version }}.service
+#  notify: Stop postgres
+
+#- name: Modify the Postgres script
+#  lineinfile:
+#    name: "/etc/init.d/postgresql-{{ postgresql_default_version }}"
+#    regexp: "^PGDATA="
+#    line: "PGDATA={{ postgresql_new_data_dir }}"
+
+#- name: Modify the Postgres config (add new data dir)
+#  lineinfile:
+#    name: "/var/lib/pgsql/{{ postgresql_default_version }}/data/postgresql.conf"
+#    regexp: "^#data_directory ="
+#    line: "data_directory ={{ postgresql_new_data_dir }}"
+
+- name: Create Postgres dir
+  file:
+    path: "{{ postgresql_dir }}"
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: 0755
+
+- name: Change database owner
+  shell: chown galaxy:galaxy "{{ host_root_database_dir }}"
+
+- name: Change Socket dir permissions
+  shell: chmod o+wr "{{ host_socket_dir }}"
+
+
+- name: rsynch postgres dir to database dir
+  shell: rsync -av /var/lib/pgsql/  "{{ postgresql_dir }}"
+
+- name: Create postgres bkp dir
+  file:
+    path: "{{ postgresql_data_dir }}.bkp"
+    state: directory
+    owner: postgres
+    group: postgres
+
+- name: rsynch postgres dir to postgres bkp dir
+  shell: rsync -av "{{ postgresql_data_dir }}"  "{{ postgresql_data_dir }}.bkp"
+
+
+- name:
+  become: yes
+  become_method: sudo
+  become_user: postgres
+  remote_user: "{{ remote_user }}"
+  replace:
+    path: /var/lib/pgsql/.bash_profile
+    regexp: '/var/lib/pgsql/10/data'
+    replace: '/srv/galaxy/pgsql/10/data'
+    backup: yes
+
+- name: Add postgres new data dir to config
+  lineinfile:
+    name: "/srv/galaxy/pgsql/{{ postgresql_default_version }}/data/postgresql.conf"
+    line: "data_directory= '{{ postgresql_new_data_dir }}'"
+    insertbefore: '^#data_directory='
+
+#https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/selinux_users_and_administrators_guide/sect-managing_confined_services-postgresql-configuration_examples
+- name: Modify Postgres env variable
+  become: yes
+  become_method: sudo
+  become_user: root
+  template:
+    src: "templates/postgres/postgresql-{{ postgresql_default_version }}.service"
+    dest: "{{ postgresql_service_dir }}/postgresql-{{ postgresql_default_version }}.service"
+
+
+- name: Add context mapping to new data location
+  become: yes
+  become_method: sudo
+  become_user: root
+  shell: semanage fcontext -a -t postgresql_db_t "{{ postgresql_dir }}(/.*)?"
+
+- name: Apply this context mapping to the running system
+  become: yes
+  become_method: sudo
+  become_user: "{{ remote_user }}"
+  shell: /usr/sbin/restorecon -R -v  {{ postgresql_dir }}
+
+
+- name: Reload Deamon
+  shell: systemctl daemon-reload
+#  notify: Reload deamon
+
+- name: start postgre
+  shell: systemctl start postgresql-{{ postgresql_default_version }}.service
+#  notify: Start postgres
+
+- name: Reboot the Machine
+  shell: "sleep 5 && sudo reboot"
+  async: 1
+  poll: 0
+
+
+- name: Wait server come back
+  wait_for_connection:
+    connect_timeout: 20
+    sleep: 5
+    delay: 5
+    timeout: 300

@@ -1,0 +1,136 @@
+---
+# Manage Galaxy Eggs
+
+- name: Check if Galaxy uses eggs or wheels
+  stat:
+    path: "{{ galaxy_requirements_file }}"
+  register: requirements_txt
+
+- name: upgrade pip
+  shell: /srv/galaxy/server/.venv/bin/pip install --upgrade pip
+
+#- name: Replace ampq version to 1.48 (realease_18.05)
+#  replace:
+#    dest: "{{ galaxy_requirements_file }}"
+#    regexp: 'amqp==2.2.2'
+#    replace: 'amqp==1.4.8'
+#    backup: yes
+#
+#- name: Replace version to ampq to 2.51 (realease_18.05)
+#  replace:
+#    dest: "{{ galaxy_requirements_file }}"
+#    regexp: 'babel==2.5.3'
+#    replace: 'babel==2.5.1'
+#    backup: yes
+#
+#- name: Replace version to beaker to 1.7.0 (realease_18.05)
+#  replace:
+#    dest: "{{ galaxy_requirements_file }}"
+#    regexp: 'beaker==1.9.1'
+#    replace: 'beaker==1.7.0'
+#    backup: yes
+#
+#- name: Replace version to bioblend to 0.7.0 (realease_18.05)
+#  replace:
+#    dest: "{{ galaxy_requirements_file }}"
+#    regexp: 'bioblend==0.10.0'
+#    replace: 'bioblend==0.7.0'
+#    backup: yes
+#
+#- name: Replace version to boto to 2.38.0 (realease_18.05)
+#  replace:
+#    dest: "{{ galaxy_requirements_file }}"
+#    regexp: 'boto==2.46.1'
+#    replace: 'boto==2.38.0'
+#    backup: yes
+#
+#- name: Replace version to certifi to 2018.1.18 (realease_18.05)
+#  replace:
+#    dest: "{{ galaxy_requirements_file }}"
+#    regexp: 'certifi==2018.1.18'
+#    replace: 'certifi==2017.7.27.1'
+#    backup: yes
+
+#- name: Replace Pysam Vesion for 16.10
+#  replace:
+#    dest: "{{ galaxy_requirements_file }}"
+#    regexp: '0\.8\.4\+gx5'
+#    replace: '0.8.4+gx1'
+#    backup: yes
+
+- name: Commeting bx-python order
+  lineinfile:
+    dest: "{{ galaxy_server_dir }}/requirements.txt"
+    regexp: '^bx-python'
+    line: '#bx-python==0.7.3'
+
+- name: Add bx-python after numpy
+  lineinfile:
+    dest: "{{ galaxy_server_dir }}/requirements.txt"
+    insertafter: 'pycrypto==2.6.1'
+    line: 'bx-python==0.8.2'
+
+
+
+
+- name: Fetch Galaxy eggs
+  command: "{{ galaxy_venv_dir }}/bin/python {{ galaxy_server_dir }}/scripts/fetch_eggs.py -c {{ galaxy_config_file }} chdir={{ galaxy_server_dir }}"
+  environment:
+    GALAXY_EGGS_PATH: "{{ galaxy_eggs_path | default(galaxy_server_dir ~ '/eggs') }}"
+    PYTHONPATH: null
+  when: not requirements_txt.stat.exists
+  register: fetch_eggs_result
+  changed_when: (fetch_eggs_result.rc == 0) and (fetch_eggs_result.stdout != "")
+
+# virtualenv_command is still required if `virtualenv` isn't on $PATH, even if
+# the venv already exists.
+#- name: Install Galaxy pip
+#  pip:
+#    name: pip
+#    version: "{{ galaxy_pip_version }}"
+#    extra_args: "--no-index --find-links https://wheels.galaxyproject.org/simple/pip"
+#    virtualenv: "{{ galaxy_venv_dir }}"
+#    virtualenv_command: "{{ pip_virtualenv_command | default( 'virtualenv' ) }}"
+#  environment:
+#    PYTHONPATH: null
+#    VIRTUAL_ENV: "{{ galaxy_venv_dir }}"
+#  when: requirements_txt.stat.exists
+
+#- name: Create binary-compatibility.cfg if necessary
+#  command: "{{ galaxy_venv_dir }}/bin/python {{ galaxy_server_dir }}/scripts/binary_compatibility.py -o {{ galaxy_venv_dir }}/binary-compatibility.cfg"
+#  args:
+#    creates: "{{ galaxy_venv_dir }}/binary-compatibility.cfg"
+#  environment:
+#    PYTHONPATH: null
+#    VIRTUAL_ENV: "{{ galaxy_venv_dir }}"
+#  when: requirements_txt.stat.exists
+
+- name: Install Galaxy base dependencies
+  pip:
+    requirements: "{{ galaxy_requirements_file }}"
+    #extra_args: "--index-url https://wheels.galaxyproject.org/simple/"
+    virtualenv: "{{ galaxy_venv_dir }}"
+    virtualenv_command: "{{ pip_virtualenv_command | default( 'virtualenv' ) }}"
+  environment:
+    PYTHONPATH: null
+    VIRTUAL_ENV: "{{ galaxy_venv_dir }}"
+  when: requirements_txt.stat.exists
+
+- name: Collect Galaxy conditional dependency requirement strings
+  command: "{{ galaxy_venv_dir }}/bin/python -c \"import galaxy.dependencies; print '\\n'.join(galaxy.dependencies.optional('{{ galaxy_config_file }}'))\""
+  environment:
+    PYTHONPATH: "{{ galaxy_server_dir }}/lib"
+  when: requirements_txt.stat.exists
+  register: conditional_dependencies
+
+- name: Install Galaxy conditional dependencies
+  pip: 
+    name: "{{ item }}"
+    extra_args: "--index-url https://wheels.galaxyproject.org/simple/"
+    virtualenv: "{{ galaxy_venv_dir }}"
+    virtualenv_command: "{{ pip_virtualenv_command | default( 'virtualenv' ) }}"
+  with_items: "{{ conditional_dependencies.stdout_lines }}"
+  environment:
+    PYTHONPATH: null
+    VIRTUAL_ENV: "{{ galaxy_venv_dir }}"
+  when: requirements_txt.stat.exists
