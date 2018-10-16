@@ -5,5 +5,8 @@
 - name: remove miniconda setup script
   file: name=/tmp/miniconda.sh state=absent
 
-- name: update conda to latest version
-  shell: "{{ miniconda_home }}/bin/conda update conda --yes -q executable=/bin/bash"
+#- name: update conda to latest version
+#  shell: "{{ miniconda_home }}/bin/conda update conda --yes -q executable=/bin/bash"
+
+- name: Downgrade to 4.3.21
+  shell: "{{ miniconda_home }}/bin/conda install conda=4.3.21"

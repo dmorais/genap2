@@ -28,7 +28,8 @@
   when: miniconda_downloaded is success
   notify:
     - remove miniconda setup script
-    - update conda to latest version
+    - Downgrade to 4.3.21
+#    - update conda to latest version
 
 
 - name: Set Conda dir owerniship
