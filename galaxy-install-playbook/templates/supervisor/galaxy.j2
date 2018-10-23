@@ -40,8 +40,8 @@ autorestart     = true
 startsecs       = 10
 user            = {{ galaxy_user }}
 stopsignal      = INT
-stderr_logfile=/var/uwsgi.err
-stdout_logfile=/var/uwsgi.log
+stderr_logfile= {{host_galaxy_log_dir}}/uwsgi.err
+stdout_logfile= {{host_galaxy_log_dir}}/uwsgi.log
 
 [program:handler]
 command        = {{ galaxy_venv_dir }}/bin/python {{ galaxy_server_dir }}/scripts/paster.py serve {{ galaxy_server_dir }}/config/galaxy.ini  --server-name=handler%(process_num)s --pid-file={{ galaxy_server_dir }}/handler%(process_num)s.pid --log-file={{ galaxy_server_dir }}/handler%(process_num)s.log
@@ -53,7 +53,7 @@ autostart      = true
 autorestart    = true
 startsecs      = 20
 stopsignal     = INT
-stderr_logfile = {{ galaxy_server_dir }}/handler%(process_num)s.err
+stderr_logfile = {{host_galaxy_log_dir}}/handler%(process_num)s.err
 user           = {{ galaxy_user }}
 environment    = PYTHON_EGG_CACHE=/home/galaxy/.python-eggs,LD_LIBRARY_PATH=/opt/torque/lib,LIBTORQUE_DIR=/opt/torque/lib/
 

@@ -37,7 +37,3 @@
 #    recurse: yes
 #  with_items: " {{ miniconda_environments }} "
 
-
-#
-#NOTE
-#/srv/galaxy/tool-dependency/_conda/bin/conda install -c conda-canary conda=4.6.0b0

@@ -2,3 +2,4 @@
 host_server_name: <container>.<vzhost>.<domain>
 host_galaxy_tools_galaxy_instance_url: http://{{ host_server_name }}/galaxy/
 host_admin_api_key: ''
+

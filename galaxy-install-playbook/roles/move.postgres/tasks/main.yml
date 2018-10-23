@@ -47,20 +47,20 @@
   shell: rsync -av "{{ postgresql_data_dir }}"  "{{ postgresql_data_dir }}.bkp"
 
 
-- name:
+- name: Replace string in pgsql bash_profile
   become: yes
   become_method: sudo
   become_user: postgres
   remote_user: "{{ remote_user }}"
   replace:
     path: /var/lib/pgsql/.bash_profile
-    regexp: '/var/lib/pgsql/10/data'
-    replace: '/srv/galaxy/pgsql/10/data'
+    regexp: "/var/lib/pgsql/{{ postgresql_default_version }}/data"
+    replace: "{{ postgresql_dir }}/{{ postgresql_default_version }}/data"
     backup: yes
 
 - name: Add postgres new data dir to config
   lineinfile:
-    name: "/srv/galaxy/pgsql/{{ postgresql_default_version }}/data/postgresql.conf"
+    name: "{{ postgresql_dir }}/{{ postgresql_default_version }}/data/postgresql.conf"
     line: "data_directory= '{{ postgresql_new_data_dir }}'"
     insertbefore: '^#data_directory='
 
@@ -91,7 +91,7 @@
   shell: systemctl daemon-reload
 #  notify: Reload deamon
 
-- name: start postgre
+- name: start postgres
   shell: systemctl start postgresql-{{ postgresql_default_version }}.service
 #  notify: Start postgres
 

@@ -54,7 +54,8 @@
 
 - name: Set virtualenv ownership
   file:
-    path: "/srv/galaxy/tool-dependency/_conda/lib/python2.7/site-packages"
+    path: "{{ host_tool_dependency_dir }}/_conda/lib/python2.7/site-packages"
     owner: "{{ galaxy_user }}"
     group: "{{ galaxy_user }}"
     recurse: yes
+

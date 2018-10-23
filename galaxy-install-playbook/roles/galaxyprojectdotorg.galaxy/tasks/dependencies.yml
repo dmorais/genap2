@@ -7,56 +7,7 @@
   register: requirements_txt
 
 - name: upgrade pip
-  shell: /srv/galaxy/server/.venv/bin/pip install --upgrade pip
-
-#- name: Replace ampq version to 1.48 (realease_18.05)
-#  replace:
-#    dest: "{{ galaxy_requirements_file }}"
-#    regexp: 'amqp==2.2.2'
-#    replace: 'amqp==1.4.8'
-#    backup: yes
-#
-#- name: Replace version to ampq to 2.51 (realease_18.05)
-#  replace:
-#    dest: "{{ galaxy_requirements_file }}"
-#    regexp: 'babel==2.5.3'
-#    replace: 'babel==2.5.1'
-#    backup: yes
-#
-#- name: Replace version to beaker to 1.7.0 (realease_18.05)
-#  replace:
-#    dest: "{{ galaxy_requirements_file }}"
-#    regexp: 'beaker==1.9.1'
-#    replace: 'beaker==1.7.0'
-#    backup: yes
-#
-#- name: Replace version to bioblend to 0.7.0 (realease_18.05)
-#  replace:
-#    dest: "{{ galaxy_requirements_file }}"
-#    regexp: 'bioblend==0.10.0'
-#    replace: 'bioblend==0.7.0'
-#    backup: yes
-#
-#- name: Replace version to boto to 2.38.0 (realease_18.05)
-#  replace:
-#    dest: "{{ galaxy_requirements_file }}"
-#    regexp: 'boto==2.46.1'
-#    replace: 'boto==2.38.0'
-#    backup: yes
-#
-#- name: Replace version to certifi to 2018.1.18 (realease_18.05)
-#  replace:
-#    dest: "{{ galaxy_requirements_file }}"
-#    regexp: 'certifi==2018.1.18'
-#    replace: 'certifi==2017.7.27.1'
-#    backup: yes
-
-#- name: Replace Pysam Vesion for 16.10
-#  replace:
-#    dest: "{{ galaxy_requirements_file }}"
-#    regexp: '0\.8\.4\+gx5'
-#    replace: '0.8.4+gx1'
-#    backup: yes
+  shell:  "source {{ galaxy_venv_dir }}/bin/activate && pip install --upgrade pip"
 
 - name: Commeting bx-python order
   lineinfile:
@@ -69,9 +20,6 @@
     dest: "{{ galaxy_server_dir }}/requirements.txt"
     insertafter: 'pycrypto==2.6.1'
     line: 'bx-python==0.8.2'
-
-
-
 
 - name: Fetch Galaxy eggs
   command: "{{ galaxy_venv_dir }}/bin/python {{ galaxy_server_dir }}/scripts/fetch_eggs.py -c {{ galaxy_config_file }} chdir={{ galaxy_server_dir }}"

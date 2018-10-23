@@ -6,6 +6,19 @@
 
   tasks:
 
+  - name: Restore OS Python (Comment Line)
+    become: yes
+    replace:
+      path: "/etc/ld.so.conf"
+      regexp: '(.*_conda.*)'
+      replace: '#\1'
+
+
+  - name: Restore OS Python (ldconfig)
+    become: yes
+    shell: 'ldconfig'
+
+
 #  - name: Apply this context mapping to the running system
 #    become: yes
 #    become_method: sudo

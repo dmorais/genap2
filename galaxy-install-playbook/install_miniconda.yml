@@ -34,10 +34,10 @@
         mode: 777
 
 
-    - name: Remove conda lib from ld.so.conf
+    - name: Remove conda lib from ld.so.conf (Restore OS Python)
       lineinfile:
         path: /etc/ld.so.conf
-        line: '/srv/galaxy/tool-dependency/_conda//lib'
+        line: "{{ miniconda_home }}/lib"
         state: absent
 
     - name: Reload libs

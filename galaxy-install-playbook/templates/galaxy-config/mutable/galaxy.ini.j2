@@ -48,7 +48,7 @@
 processes = 2
 pythonpath = lib
 threads = 4
-logto = {{ galaxy_server_dir }}/uwsgi.log
+logto = {{host_galaxy_log_dir}}/uwsgi.log
 master = True
 vacuum=true
 uid = galaxy
@@ -192,7 +192,7 @@ tool_config_file = config/tool_conf.xml,config/shed_tool_conf.xml
 
 # Default path to the directory containing the tools defined in tool_conf.xml.
 # Other tool config files must include the tool_path as an attribute in the <toolbox> tag.
-tool_path = {{ cvmfs_server_dir }}/tools
+tool_path = {{ host_galaxy_server_dir }}/tools
 
 # Path to the directory in which tool dependencies are placed.  This is used by
 # the tool shed to install dependencies and can also be used by administrators
@@ -225,7 +225,7 @@ conda_exec = {{ host_tool_dependency_dir }}/_conda/bin/conda
 #conda_debug = False
 
 # conda channels to enable by default (http://conda.pydata.org/docs/custom-channels.html)
-conda_ensure_channels = conda-forge,r,bioconda,iuc
+conda_ensure_channels = iuc,bioconda,conda-forge,defaults
 
 # Set to True to instruct Galaxy to look for and install missing tool
 # dependencies before each job runs.

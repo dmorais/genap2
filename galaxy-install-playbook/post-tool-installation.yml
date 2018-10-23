@@ -1,0 +1,46 @@
+---
+- name: Post installation configurations
+  hosts: galaxyservers
+  become: yes
+  become_method: sudo
+  become_user: "{{ galaxy_user }}"
+  remote_user: "{{ remote_user }}"
+  gather_facts: False
+  tasks:
+    - name: Create symlink to samtools
+      file:
+        src: "{{host_tool_dependency_dir }}/samtools/0.1.19/iuc/package_samtools_0_1_19/c9bd782f5342/"
+        dest: "{{host_tool_dependency_dir }}/samtools/default"
+        state: link
+        group: galaxy
+        owner: galaxy
+
+    - name: Copy loc Files
+      copy:
+        src: "{{ item }}"
+        dest: "{{ galaxy_server_dir }}/tool-data"
+        owner: galaxy
+        mode: 0644
+      with_fileglob: templates/loc-files/*
+      tags: loc
+
+    - name: Delete Shared dir
+      file:
+        path:  "{{ galaxy_server_dir }}/tool-data/shared/"
+        state: absent
+      tags: delete-share
+
+    - name: Copy new Shared dir
+      copy:
+        src:  templates/share-files/shared
+        dest: "{{ galaxy_server_dir }}/tool-data"
+        owner: galaxy
+      tags: copy-share
+
+    - name: Create symlink of genome directory
+      file:
+        src: "{{ host_cvmfs_ref_galaxy }}"
+        dest: "{{ galaxy_server_dir }}/tool-data/genome"
+        state: link
+        owner: galaxy
+      tags: genome-link

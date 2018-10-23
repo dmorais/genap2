@@ -48,7 +48,7 @@
 
 - name: Create postgres socket dir
   file:
-    path: /srv/sock/postgresql/
+    path: "{{ postgresql_socket_dir }}"
     state: directory
     mode: 0770
     owner: postgres

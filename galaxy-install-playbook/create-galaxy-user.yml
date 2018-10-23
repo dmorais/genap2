@@ -14,7 +14,7 @@
 
     - name: Create Galaxy server directory
       file:
-        name: /srv/galaxy
+        name: "{{ host_galaxy_srv_dir }}"
         state: directory
         owner: "{{ galaxy_user }}"
         group: "{{ galaxy_user }}"

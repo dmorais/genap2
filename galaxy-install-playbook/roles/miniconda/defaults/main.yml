@@ -14,7 +14,7 @@ miniconda_home: '~/miniconda'
 #    pkgs: 'virtualenv=15.0.3'
 
 
-miniconda_modify_path: yes
+miniconda_modify_path: no
 miniconda_rcfile: '~/.bashrc'
 
 miniconda_add_condarc: yes
