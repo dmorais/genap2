@@ -102,8 +102,8 @@ galaxy_config_files:
     dest: "{{ galaxy_server_dir }}/config/"
   - src: "templates/galaxy-config/server/job_conf.xml"
     dest: "{{ galaxy_server_dir }}/config/"
-  - src: "templates/galaxy-config/server/shed_tool_conf.xml"
-    dest: "{{ galaxy_server_dir }}/config/"
+#  - src: "templates/galaxy-config/server/shed_tool_conf.xml"
+#    dest: "{{ galaxy_server_dir }}/config/"
   - src: "templates/galaxy-config/server/dependency_resolvers_conf.xml"
     dest: "{{ galaxy_server_dir }}/config/"
   - src: "templates/galaxy-config/server/resub_destination.py"
@@ -117,3 +117,5 @@ galaxy_config_templates:
   - src: "templates/galaxy-config/mutable/galaxy.ini.j2"
     dest: "{{ galaxy_server_dir }}/config/galaxy.ini"
 
+  - src: "templates/galaxy-config/mutable/shed_tool_conf.xml.j2"
+    dest: "{{ galaxy_server_dir }}/config/shed_tool_conf.xml"

@@ -40,6 +40,13 @@
         owner: "{{ galaxy_user }}"
         group: "{{ galaxy_user }}"
 
+    - name: Create Log directory
+      file:
+        name: "{{ host_galaxy_log_dir }}"
+        state: directory
+        owner: "{{ galaxy_user }}"
+        group: "{{ galaxy_user }}"
+
     - name: Install mlocate
       yum:
         pkg: mlocate

@@ -48,7 +48,7 @@
 processes = 2
 pythonpath = lib
 threads = 4
-logto = {{host_galaxy_log_dir}}/uwsgi.log
+logto = {{ host_galaxy_log_dir }}/uwsgi.log
 master = True
 vacuum=true
 uid = galaxy
@@ -56,14 +56,15 @@ gid = galaxy
 chmod-socket = 770
 chown-socket = galaxy
 socket = /srv/sock/uwsgi.sock
-#
+
+
 [server:handler0]
 use = egg:Paste#http
 port = 8088
 host = 0.0.0.0
 use_threadpool = true
 threadpool_workers = 5
-
+logto = {{ host_galaxy_log_dir }}/handler0.log
 
 [server:handler1]
 use = egg:Paste#http
@@ -71,7 +72,7 @@ port = 8089
 host = 0.0.0.0
 use_threadpool = true
 threadpool_workers = 5
-
+logto = {{ host_galaxy_log_dir }}/handler1.log
 
 [server:handler2]
 use = egg:Paste#http
@@ -79,6 +80,7 @@ port = 8090
 host = 0.0.0.0
 use_threadpool = true
 threadpool_workers = 5
+logto = {{ host_galaxy_log_dir }}/handler2.log
 
 # ---- Filters --------------------------------------------------------------
 
