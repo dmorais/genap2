@@ -101,15 +101,15 @@ galaxy_config_files:
   - src: "templates/galaxy-config/server/job_resource_params_conf.xml"
     dest: "{{ galaxy_server_dir }}/config/"
   - src: "templates/galaxy-config/server/job_conf.xml"
-    dest: "{{ galaxy_server_dir }}/config/"
+    dest: "{{ galaxy_server_dir }}/config/job_conf.xml.GenAP"
 #  - src: "templates/galaxy-config/server/shed_tool_conf.xml"
 #    dest: "{{ galaxy_server_dir }}/config/"
   - src: "templates/galaxy-config/server/dependency_resolvers_conf.xml"
     dest: "{{ galaxy_server_dir }}/config/"
   - src: "templates/galaxy-config/server/resub_destination.py"
     dest: "{{ galaxy_server_dir }}/lib/galaxy/jobs/rules/"
-  - src: "templates/galaxy-config/server/job_conf.xml.local"
-    dest: "{{ galaxy_server_dir }}/config/"
+#  - src: "templates/galaxy-config/server/job_conf.xml.local"
+#    dest: "{{ galaxy_server_dir }}/config/"
   - src: "templates/galaxy-config/server/tool_data_table_conf.xml"
     dest: "{{ galaxy_server_dir }}/config/"
 
@@ -119,3 +119,9 @@ galaxy_config_templates:
 
   - src: "templates/galaxy-config/mutable/shed_tool_conf.xml.j2"
     dest: "{{ galaxy_server_dir }}/config/shed_tool_conf.xml"
+
+  - src: "templates/galaxy-config/mutable/job_conf.xml.local.j2"
+    dest: "{{ galaxy_server_dir }}/config/job_conf.xml"
+
+  - src: "templates/galaxy-config/mutable/supervisord.sh.j2"
+    dest: "{{ galaxy_server_dir }}/supervisord.sh"

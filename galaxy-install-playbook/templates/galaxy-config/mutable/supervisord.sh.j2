@@ -1,0 +1,6 @@
+#!/bin/bash
+export LC_ALL="en_US.UTF-8"
+export LC_CTYPE="en_US.UTF-8"
+su - galaxy bash -c "{{ host_galaxy_server_dir }}/manage_db.sh upgrade"
+source {{ galaxy_venv_dir }}/bin/activate
+{{ galaxy_venv_dir }}/bin/python {{ galaxy_venv_dir }}/bin/supervisord -c /etc/supervisor/conf.d/galaxy.conf

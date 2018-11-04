@@ -2,6 +2,7 @@ server {
     listen *:80 default_server;
     server_name _ ;
     client_max_body_size 20G;
+    underscores_in_headers on;
 
     location / {
 
@@ -13,18 +14,19 @@ server {
     location /galaxy {
         uwsgi_pass  unix://///srv/sock/uwsgi.sock;
         include uwsgi_params;
+        proxy_set_header REMOTE_USER $remote_user;
         proxy_set_header   X-Forwarded-Host $host;
         proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
     }
 
     location /galaxy/static {
-        alias {{ galaxy_server_dir }}/static;
+        alias {{ host_galaxy_server_dir }}/static;
     }
     location /galaxy/static/style {
-        alias {{ galaxy_server_dir }}/static/june_2007_style/blue;
+        alias {{ host_galaxy_server_dir }}/static/june_2007_style/blue;
     }
     location /galaxy/static/welcome.html {
-        alias {{ galaxy_server_dir }}/static/welcome.html.sample;
+        alias {{ host_galaxy_server_dir }}/static/welcome.html.sample;
     }
 
     location /galaxy/root/display_as {
