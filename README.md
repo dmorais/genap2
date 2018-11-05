@@ -61,7 +61,7 @@ Start/stop/restart Galaxy
 ```
 ansible-playbook manage-galaxy-with-supervisor.yml --tags "galaxy-start, stat"
 ansible-playbook manage-galaxy-with-supervisor.yml --tags "galaxy-stop, stat"
-ansible-playbook manage-galaxy-with-supervisor.yml --tags "galaxy-resstart, stat"
+ansible-playbook manage-galaxy-with-supervisor.yml --tags "galaxy-restart, stat"
 ```
 
 Once Galaxy has been started create an admin user and an API they for this user.
