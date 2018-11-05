@@ -1,18 +1,165 @@
 # Users
-galaxy_user:
+galaxy_user: galaxy
 remote_user:
 
-# Host
-host_home_dir: /home/galaxy
-host_galaxy_root_dir:
-host_tool_dependency_dir:
-host_shed_tools_dir:
+# Sockets
+postgresql_socket_dir:
 
+
+# Host
+host_galaxy_srv_dir:
+host_home_dir:
+
+host_cvmfs_soft_galaxy:
+host_cvmfs_ref_galaxy:
+
+host_galaxy_root_dir: "{{ host_cvmfs_soft_galaxy }}/<version_name>"
+
+host_tool_dependency_dir:  "{{ host_galaxy_root_dir}}/tool-dependency"
+host_shed_tools_dir:  "{{ host_galaxy_root_dir}}/shed-tools"
+host_galaxy_server_dir: "{{ host_galaxy_root_dir}}/server/"
+host_galaxy_log_dir: /var/log/galaxy
+
+host_root_database_dir:
+
+host_ftp_upload_dir: "{{ host_root_database_dir}}/upload"
+
+host_smtp_server:
+host_smtp_username:
+host_smtp_password:
+host_brand:
+host_remote_user_maildomain:
+host_use_remote_user:
+host_admin_users:
+host_require_login:
+host_allow_user_creation:
+host_ftp:
+host_enable_quotas:
+host_cleanup_job:
+host_admin_api_key:
+
+host_socket_dir: "{{ postgresql_socket_dir }}"
 
 
 # Miniconda
-miniconda_home:
-miniconda_modify_path:
-miniconda_rcfile:
-miniconda_installed:
-miniconda_lib:
+miniconda_home: "{{ host_tool_dependency_dir }}/_conda/"
+miniconda_modify_path: no
+miniconda_rcfile: /home/galaxy/.bashrc
+miniconda_installed: yes
+miniconda_lib: "{{ miniconda_home }}/lib"
+
+# Miscelaneus
+pip_virtualenv_command: "{{ miniconda_home }}/bin/virtualenv -p  {{ miniconda_home }}/bin/python"
+cvmfs_server_dir: "{{ host_cvmfs_soft_galaxy }}/server"
+galaxy_venv_dir: "{{ host_galaxy_root_dir }}/server/.venv"
+
+#-------------------------
+# Nginx
+#-------------------------
+
+#galaxyprojectdotorg.nginx
+##############################
+# Where should the role find ssl certificates to copy to the remote host
+# (relative from where ansible-playbook is called if not
+# absolute).
+
+nginx_ssl_src_dir:
+
+# "flavor" of nginx to install
+nginx_flavor: full
+
+# where to install nginx configs
+nginx_conf_dir:
+
+# whether nginx will run from supervisor
+nginx_supervisor:
+nginx_supervisor_service_name:
+
+# enable ipv6 for the default vhost?
+nginx_enable_default_ipv6:
+nginx_enable_default_server:
+nginx_conf_worker_processes:
+
+nginx_configs:
+  - galaxy
+
+#--------------------
+# Postgres
+#-------------------
+postgresql_default_version: 10
+
+# galaxyprojectdotorg.postgresql
+#######################################
+postgresql_backup_local_dir: ~postgres/backup
+postgresql_backup_active_dir: "{{ postgresql_backup_local_dir }}/active"
+postgresql_backup_mail_recipient: postgres
+postgresql_backup_rotate: true
+postgresql_conf_dir: "/var/lib/pgsql/{{postgresql_default_version}}/data/"
+postgresql_conf:
+  listen_addresses: "' '"
+  unix_socket_directories: "'/srv/sock/postgresql'"
+  unix_socket_permissions: 0770
+  unix_socket_group: "'galaxy'"
+
+
+
+
+# move.prostgres role vars
+######################################
+
+postgresql_service_name: postgresql
+postgresql_dir:  "{{ host_galaxy_srv_dir }}/pgsql/"
+host_root_pgsql_dir:  "{{ host_galaxy_srv_dir }}"
+postgresql_data_dir: "/var/lib/pgsql/{{ postgresql_default_version }}/data"
+postgresql_new_data_dir: "{{ host_root_pgsql_dir }}/pgsql/{{ postgresql_default_version }}/data"
+
+# This variable is used to copy the config that modifies the postgres PGDATA env variable
+postgresql_service_dir:
+
+#######################################
+
+postgresql_objects_users:
+  - name: galaxy
+    postgresql_login_unix_socket:
+
+
+postgresql_objects_databases:
+  - name: galaxy
+    owner: galaxy
+    postgresql_login_unix_socket:
+
+postgresql_pg_hba_conf:
+  - host  all all  0.0.0.0/0 trust
+
+postgresql_objects_groups: []
+
+postgresql_objects_privileges: []
+
+#---------------------
+# Supervisord
+#---------------------
+supervisor_configs:
+  - galaxy
+
+#-----------------------
+# Galaxy
+#-----------------------
+galaxy_root: "{{ host_galaxy_root_dir }} "
+galaxy_server_dir: "{{ host_galaxy_server_dir }}"
+galaxy_vcs: git
+galaxy_changeset_id:
+galaxy_force_checkout: yes
+users: "{{ galaxy_user }}"
+
+
+galaxy_config:
+  "app:main":
+    database_connection:
+    admin_users:
+    tool_dependency_dir: "{{ host_tool_dependency_dir }}"
+  "uwsgi":
+    processes: 1
+    socket:
+    pythonpath: "{{ galaxy_server_dir }}/lib"
+    threads:
+    master:
