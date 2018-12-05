@@ -15,19 +15,24 @@ from subprocess import call
 conda_env_path = os.path.join(os.environ['CONDA_ROOT_PATH'], 'envs')
 envs = []
 
+black_listed_env= ["__bcftools@1.5"]
+
 for f in os.listdir(conda_env_path):
   if not f.startswith('.'):
     envs.append(f)
 
 for env in envs:
+  if env in black_listed_env:
+    continue
+
   flist = []
-  for folder  in os.listdir(os.path.join(conda_env_path, os.path.join(env, '/bin/'))):
+  for folder  in os.listdir(os.path.join(conda_env_path, os.path.join(env, 'bin/'))):
     if not folder.startswith('.'):
       flist.append(folder)
 
   if not "conda" in flist:
     str1 = os.path.join(os.environ['CONDA_ROOT_PATH'], "bin/conda")
-    str2 = os.path.join(os.environ['CONDA_ENV_PATH'],  os.path.join(env,"/bin/"))
+    str2 = os.path.join(os.environ['CONDA_ENV_PATH'],  os.path.join(env,"bin/"))
 
     call(["ln", "-s", str1, str2 + "conda"])
     call(["ln", "-s", str1, str2 + "activate"])
