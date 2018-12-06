@@ -15,14 +15,21 @@
     - name: UpdateDB
       command: updatedb
 
-    - name: Add libpython2.7 path
-      lineinfile:
-        dest: /etc/ld.so.conf
-        state: present
-        line: "{{ miniconda_lib }}"
-
-    - name: Reload configs
-      command: ldconfig
+#    - name: Add libpython2.7 path
+#      lineinfile:
+#        dest: /etc/ld.so.conf
+#        state: present
+#        line: "{{ miniconda_lib }}"
+#
+#    - name: Reload configs
+#      command: ldconfig
+#
+#
+#    - name: Comment conda lib from ld.so.conf (Restore OS Python)
+#      replace:
+#        path: /etc/ld.so.conf
+#        regexp: "(/cvmfs/soft.galaxy/v2.1/tool-dependency/_conda//lib)"
+#        replace: '#\1'
 
     - name: Copy over Good libread
       copy:
@@ -34,11 +41,11 @@
         mode: 777
 
 
-    - name: Remove conda lib from ld.so.conf (Restore OS Python)
-      lineinfile:
-        path: /etc/ld.so.conf
-        line: "{{ miniconda_home }}/lib"
-        state: absent
+#    - name: Remove conda lib from ld.so.conf (Restore OS Python)
+#      lineinfile:
+#        path: /etc/ld.so.conf
+#        line: "{{ miniconda_home }}/lib"
+#        state: absent
 
     - name: Reload libs
       shell: "ldconfig"

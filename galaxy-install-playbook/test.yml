@@ -6,17 +6,22 @@
 
   tasks:
 
-  - name: Restore OS Python (Comment Line)
-    become: yes
-    replace:
-      path: "/etc/ld.so.conf"
-      regexp: '(.*_conda.*)'
-      replace: '#\1'
+  - name: Ensure PostgreSQL is running
+#  shell : systemctl start postgresql-{{ postgresql_default_version }}.service && systemctl enable postgresql-{{ postgresql_default_version }}.service
+#  shell: service postgresql-9.4 initdb
+  service: name={{ postgresql_service_name }} enabled=yes state=started
 
-
-  - name: Restore OS Python (ldconfig)
-    become: yes
-    shell: 'ldconfig'
+#  - name: Restore OS Python (Comment Line)
+#    become: yes
+#    replace:
+#      path: "/etc/ld.so.conf"
+#      regexp: '(.*_conda.*)'
+#      replace: '#\1'
+#
+#
+#  - name: Restore OS Python (ldconfig)
+#    become: yes
+#    shell: 'ldconfig'
 
 
 #  - name: Apply this context mapping to the running system

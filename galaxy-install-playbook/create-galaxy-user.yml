@@ -7,6 +7,22 @@
 
 
   tasks:
+    - name: Disble selinux
+      selinux:
+        state: disabled
+
+    - name: Reboot the Machine
+      shell: "sleep 5 && sudo reboot"
+      async: 1
+      poll: 0
+
+    - name: Wait server come back
+      wait_for_connection:
+        connect_timeout: 20
+        sleep: 5
+        delay: 5
+        timeout: 300
+
     - name: Create Galaxy user
       user:
         name: "{{ galaxy_user }}"
