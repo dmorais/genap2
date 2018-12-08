@@ -10,3 +10,6 @@
 
 - name: Downgrade to 4.3.21
   shell: "{{ miniconda_home }}/bin/conda install conda=4.3.21"
+
+- name: run ldconfig
+  action: command /sbin/ldconfig

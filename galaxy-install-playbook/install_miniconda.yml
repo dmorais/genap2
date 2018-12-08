@@ -6,47 +6,24 @@
   roles:
     - miniconda
 
-- name: Fix libpython2.7.so.1.0 BUG
-  hosts: galaxyservers
-  become_method: sudo
-  become: yes
-  remote_user: "{{ remote_user }}"
-  tasks:
-    - name: UpdateDB
-      command: updatedb
-
-#    - name: Add libpython2.7 path
-#      lineinfile:
-#        dest: /etc/ld.so.conf
-#        state: present
-#        line: "{{ miniconda_lib }}"
+#- name: Fix libpython2.7.so.1.0 BUG
+#  hosts: galaxyservers
+#  become_method: sudo
+#  become: yes
+#  remote_user: "{{ remote_user }}"
+#  tasks:
+#    - name: UpdateDB
+#      command: updatedb
 #
-#    - name: Reload configs
-#      command: ldconfig
+#    - name: Copy over Good libread
+#      copy:
+#        remote_src: yes
+#        src: /usr/lib64/libreadline.so.6
+#        dest: "{{ miniconda_lib }}"
+#        owner: galaxy
+#        group: galaxy
+#        mode: 777
 #
-#
-#    - name: Comment conda lib from ld.so.conf (Restore OS Python)
-#      replace:
-#        path: /etc/ld.so.conf
-#        regexp: "(/cvmfs/soft.galaxy/v2.1/tool-dependency/_conda//lib)"
-#        replace: '#\1'
-
-    - name: Copy over Good libread
-      copy:
-        remote_src: yes
-        src: /usr/lib64/libreadline.so.6
-        dest: "{{ miniconda_lib }}"
-        owner: galaxy
-        group: galaxy
-        mode: 777
-
-
-#    - name: Remove conda lib from ld.so.conf (Restore OS Python)
-#      lineinfile:
-#        path: /etc/ld.so.conf
-#        line: "{{ miniconda_home }}/lib"
-#        state: absent
-
-    - name: Reload libs
-      shell: "ldconfig"
+#    - name: Reload libs
+#      shell: "ldconfig"
 

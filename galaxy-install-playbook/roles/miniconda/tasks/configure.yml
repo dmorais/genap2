@@ -20,6 +20,32 @@
     state: present
   when: miniconda_modify_path
 
+- name: UpdateDB
+  become_method: sudo
+  become: yes
+  remote_user: "{{ remote_user }}"
+  command: updatedb
+
+- name: Copy over Good libread
+  become_method: sudo
+  become: yes
+  remote_user: "{{ remote_user }}"
+  copy:
+    remote_src: yes
+    src: /usr/lib64/libreadline.so.6
+    dest: "{{ miniconda_lib }}"
+    owner: galaxy
+    group: galaxy
+    mode: 777
+  notify:
+    - run ldconfig
+
+#- name: Reload libs
+#  become_method: sudo
+#  become: yes
+#  remote_user: "{{ remote_user }}"
+#  shell: "ldconfig"
+
 
 #- name: create environment
 #  remote_user: "{{ remote_user }}"

@@ -55,6 +55,4 @@
     group: galaxy
 
 - name: Ensure PostgreSQL is running
-#  shell : systemctl start postgresql-{{ postgresql_default_version }}.service && systemctl enable postgresql-{{ postgresql_default_version }}.service
-#  shell: service postgresql-9.4 initdb
   service: name={{ postgresql_service_name }} enabled=yes state=started
