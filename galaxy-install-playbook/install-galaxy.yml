@@ -4,44 +4,6 @@
   become_method: sudo
   become: yes
   remote_user: "{{ remote_user }}"
-
-  tasks:
-    - name: Install packages
-      yum:
-        pkg: "{{ item }}"
-        update_cache: yes
-        state: present
-      with_items:
-        - python-psycopg2
-        - git
-        - python-devel
-        - gcc
-        - zlib-devel
-        - openssl-devel
-        - libffi-devel
-        - python-babel
-        - python-virtualenv
-        - libxslt-devel
-        - uwsgi
-        - uwsgi-plugin-python2
-        - gcc-c++
-        - patch
-        - gcc-gfortran
-        - lapack-devel
-        - lapack
-        - blas
-        - blas-devel
-        - atlas
-        - expat-devel
-        - java-1.7.0-openjdk-devel
-        - sshfs
-        - lzo
-        - lzo-devel
-
-#      This was used on the other server, not sure yet if I will need in the new one
-#    - name: Galaxy fuse
-#      shell:  usermod -G fuse galaxy
-
   roles:
     - galaxyprojectdotorg.postgresql
     - galaxyprojectdotorg.nginx
@@ -80,7 +42,6 @@
   hosts: galaxyservers
   become: yes
   become_user: "{{ galaxy_user }}"
-
   tasks:
     - name: Install Galaxy depencencies on virtualenv
       shell: source "{{ galaxy_server_dir }}"/.venv/bin/activate && pip install "{{ item }}"

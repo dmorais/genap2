@@ -1,0 +1,16 @@
+---
+- name: Setup OS
+  hosts: galaxyservers
+  become_method: sudo
+  become: yes
+  remote_user: "{{ remote_user }}"
+  roles:
+    - setupOS
+
+- name: Miniconda
+  hosts: galaxyservers
+  become_method: sudo
+  become: yes
+  remote_user: "{{ remote_user }}"
+  roles:
+    - miniconda

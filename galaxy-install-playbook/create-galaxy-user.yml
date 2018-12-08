@@ -1,20 +1,40 @@
----
-- name: Create Galaxy user and install OS dependencies
-  hosts: galaxyservers
-  become_method: sudo
-  become: yes
-  remote_user: "{{ remote_user }}"
+#---
+#- name: Miniconda
+#  hosts: galaxyservers
+#  become_method: sudo
+#  become: yes
+#  remote_user: "{{ remote_user }}"
+#  roles:
+#    - setupOS
+#
+#- name: Miniconda
+#  hosts: galaxyservers
+#  become_method: sudo
+#  become: yes
+#  remote_user: "{{ remote_user }}"
+#  roles:
+#    - miniconda
 
 
-  tasks:
+#- name: Create Galaxy user and install OS dependencies
+#  hosts: galaxyservers
+#  become_method: sudo
+#  become: yes
+#  remote_user: "{{ remote_user }}"
+#
+#
+#  tasks:
 #    - name: Disable selinux
 #      selinux:
 #        state: disabled
+#      register: selinux_cmd
+#      ignore_errors: yes
 #
 #    - name: Reboot the Machine
 #      shell: "sleep 5 && sudo reboot"
 #      async: 1
 #      poll: 0
+#      when: '"libselinux-python required for this module" not in selinux_cmd'
 #
 #    - name: Wait server come back
 #      wait_for_connection:
@@ -22,80 +42,80 @@
 #        sleep: 5
 #        delay: 5
 #        timeout: 300
-
-    - name: Create Galaxy user
-      user:
-        name: "{{ galaxy_user }}"
-        system: yes
-
-    - name: Create Galaxy server directory
-      file:
-        name: "{{ host_galaxy_srv_dir }}"
-        state: directory
-        owner: "{{ galaxy_user }}"
-        group: "{{ galaxy_user }}"
-
-    - name: Create Galaxy database dir
-      file:
-        name: "{{ host_root_database_dir }}"
-        state: directory
-        owner: "{{ galaxy_user }}"
-        group: "{{ galaxy_user }}"
-
-    - name: Create Depedency dir
-      file:
-        name: "{{ host_tool_dependency_dir }}"
-        state: directory
-        owner: "{{ galaxy_user }}"
-        group: "{{ galaxy_user }}"
-
-    - name: Create Shed-tools directory
-      file:
-        name: "{{ host_shed_tools_dir }}"
-        state: directory
-        owner: "{{ galaxy_user }}"
-        group: "{{ galaxy_user }}"
-
-    - name: Create Log directory
-      file:
-        name: "{{ host_galaxy_log_dir }}"
-        state: directory
-        owner: "{{ galaxy_user }}"
-        group: "{{ galaxy_user }}"
-
-    - name: Install mlocate
-      yum:
-        pkg: mlocate
-        update_cache: yes
-        state: present
-
-    - name: Add EPEL
-      command: yum install -y epel-release
-
-    - name: Clean EPEL
-      command: yum clean all
-
-    - name: Update EPEL
-      command: yum -y update
-
-    - name: Install base packages1
-      yum:
-        pkg: "{{ item }}"
-        update_cache: yes
-        state: present
-      with_items:
-        - vim
-        - tar
-        - bzip2
-        - wget
-        - policycoreutils-python
-        - selinux-policy-targeted
-        - selinux-policy
-        - libselinux
-        - libselinux-python
-        - libselinux-utils
-        - setroubleshoot
-        - setroubleshoot-server
-        - setroubleshoot-plugins
+#
+#    - name: Create Galaxy user
+#      user:
+#        name: "{{ galaxy_user }}"
+#        system: yes
+#
+#    - name: Create Galaxy server directory
+#      file:
+#        name: "{{ host_galaxy_srv_dir }}"
+#        state: directory
+#        owner: "{{ galaxy_user }}"
+#        group: "{{ galaxy_user }}"
+#
+#    - name: Create Galaxy database dir
+#      file:
+#        name: "{{ host_root_database_dir }}"
+#        state: directory
+#        owner: "{{ galaxy_user }}"
+#        group: "{{ galaxy_user }}"
+#
+#    - name: Create Depedency dir
+#      file:
+#        name: "{{ host_tool_dependency_dir }}"
+#        state: directory
+#        owner: "{{ galaxy_user }}"
+#        group: "{{ galaxy_user }}"
+#
+#    - name: Create Shed-tools directory
+#      file:
+#        name: "{{ host_shed_tools_dir }}"
+#        state: directory
+#        owner: "{{ galaxy_user }}"
+#        group: "{{ galaxy_user }}"
+#
+#    - name: Create Log directory
+#      file:
+#        name: "{{ host_galaxy_log_dir }}"
+#        state: directory
+#        owner: "{{ galaxy_user }}"
+#        group: "{{ galaxy_user }}"
+#
+#    - name: Install mlocate
+#      yum:
+#        pkg: mlocate
+#        update_cache: yes
+#        state: present
+#
+#    - name: Add EPEL
+#      command: yum install -y epel-release
+#
+#    - name: Clean EPEL
+#      command: yum clean all
+#
+#    - name: Update EPEL
+#      command: yum -y update
+#
+#    - name: Install base packages1
+#      yum:
+#        pkg: "{{ item }}"
+#        update_cache: yes
+#        state: present
+#      with_items:
+#        - vim
+#        - tar
+#        - bzip2
+#        - wget
+#        - policycoreutils-python
+#        - selinux-policy-targeted
+#        - selinux-policy
+#        - libselinux
+#        - libselinux-python
+#        - libselinux-utils
+#        - setroubleshoot
+#        - setroubleshoot-server
+#        - setroubleshoot-plugins
 
 
