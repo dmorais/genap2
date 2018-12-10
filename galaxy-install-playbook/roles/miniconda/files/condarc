@@ -3,6 +3,7 @@ create_default_packages:
   - python
   - pip
   - ipython
+  - uwsgi
 
 
 # implies always using the --yes option whenever asked to proceed

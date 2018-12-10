@@ -38,12 +38,3 @@
   roles:
     - supervisor
 
-- name: Install Galaxy dependencies on virtualenv
-  hosts: galaxyservers
-  become: yes
-  become_user: "{{ galaxy_user }}"
-  tasks:
-    - name: Install Galaxy depencencies on virtualenv
-      shell: source "{{ galaxy_server_dir }}"/.venv/bin/activate && pip install "{{ item }}"
-      with_items:
-        - uwsgi
