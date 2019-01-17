@@ -64,7 +64,7 @@ port = 8088
 host = 0.0.0.0
 use_threadpool = true
 threadpool_workers = 5
-logto = {{ host_galaxy_log_dir }}/handler0.log
+
 
 [server:handler1]
 use = egg:Paste#http
@@ -72,7 +72,7 @@ port = 8089
 host = 0.0.0.0
 use_threadpool = true
 threadpool_workers = 5
-logto = {{ host_galaxy_log_dir }}/handler1.log
+
 
 [server:handler2]
 use = egg:Paste#http
@@ -80,7 +80,7 @@ port = 8090
 host = 0.0.0.0
 use_threadpool = true
 threadpool_workers = 5
-logto = {{ host_galaxy_log_dir }}/handler2.log
+
 
 # ---- Filters --------------------------------------------------------------
 
